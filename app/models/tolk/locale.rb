@@ -142,15 +142,17 @@ module Tolk
     def search_phrases(query, scope, page = nil, options = {})
       return [] unless query.present?
 
-      translations = case scope
+      case scope
+      when :keys
+        phrases = Tolk::Phrase.containing_text(query)
       when :origin
-        Tolk::Locale.primary_locale.translations.containing_text(query)
+        translations = Tolk::Locale.primary_locale.translations.containing_text(query)
       else # :target
-        self.translations.containing_text(query)
+        translations = self.translations.containing_text(query)
       end
 
-      phrases = Tolk::Phrase.scoped(:order => 'tolk_phrases.key ASC')      
-      phrases = phrases.scoped(:conditions => ['tolk_phrases.id IN(?)', translations.map(&:phrase_id).uniq])
+      phrases ||= Tolk::Phrase.scoped(:conditions => ['tolk_phrases.id IN(?)', translations.map(&:phrase_id).uniq])
+      phrases = phrases.scoped(:order => 'tolk_phrases.key ASC')
       phrases.paginate({:page => page}.merge(options))
     end
     
