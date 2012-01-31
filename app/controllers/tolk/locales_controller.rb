@@ -1,3 +1,5 @@
+# encoding: utf-8
+#
 module Tolk
   class LocalesController < Tolk::ApplicationController
     before_filter :find_locale, :only => [:show, :all, :update, :updated]
@@ -6,7 +8,7 @@ module Tolk
     def index
       @locales = Tolk::Locale.secondary_locales
     end
-  
+
     def show
       respond_to do |format|
         format.html do
