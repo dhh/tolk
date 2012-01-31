@@ -1,7 +1,9 @@
+# encoding: utf-8
+#
 module Tolk
   module ApplicationHelper
     def format_i18n_value(value)
-      h(yaml_value(value)).gsub(/\n/, '<br />')
+      h(yaml_value(value)).gsub(/\n/, '<br />').html_safe
     end
 
     def format_i18n_text_area_value(value)
@@ -14,7 +16,7 @@ module Tolk
           value = value.respond_to?(:ya2yaml) ? value.ya2yaml(:syck_compatible => true) : value.to_yaml
         end
       end
-      
+
       value
     end
 

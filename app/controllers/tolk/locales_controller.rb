@@ -1,3 +1,5 @@
+# encoding: utf-8
+#
 module Tolk
   class LocalesController < Tolk::ApplicationController
     before_filter :find_locale, :only => [:show, :all, :update, :updated]
@@ -6,14 +8,14 @@ module Tolk
     def index
       @locales = Tolk::Locale.secondary_locales
     end
-  
+
     def show
       respond_to do |format|
         format.html do
           @phrases = @locale.phrases_without_translation(params[:page])
         end
         format.atom { @phrases = @locale.phrases_without_translation(params[:page], :per_page => 50) }
-        format.yml { render :text => @locale.to_hash.ya2yaml(:syck_compatible => true) }
+        format.yaml { render :text => @locale.to_hash.ya2yaml(:syck_compatible => true) }
       end
     end
 

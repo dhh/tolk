@@ -1,3 +1,5 @@
+# encoding: utf-8
+#
 module Tolk
   class Phrase < ActiveRecord::Base
     set_table_name "tolk_phrases"

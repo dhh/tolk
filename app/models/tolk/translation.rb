@@ -1,10 +1,10 @@
+# encoding: utf-8
+#
 module Tolk
   class Translation < ActiveRecord::Base
     set_table_name "tolk_translations"
 
-    named_scope :containing_text, lambda { |query|
-      { :conditions => ["tolk_translations.text LIKE ?", "%#{query}%"] }
-    }
+    scope :containing_text, lambda {|query| where("tolk_translations.text LIKE ?", "%#{query}%") }
 
     serialize :text
     validates_presence_of :text, :if => proc {|r| r.primary.blank? && !r.explicit_nil }
@@ -56,7 +56,7 @@ module Tolk
 
     def self.detect_variables(search_in)
       case search_in
-        when String then Set.new(search_in.scan(/\{\{(\w+)\}\}/).flatten + search_in.scan(/\%\{(\w+)\}/).flatten) 
+        when String then Set.new(search_in.scan(/\{\{(\w+)\}\}/).flatten + search_in.scan(/\%\{(\w+)\}/).flatten)
         when Array then search_in.inject(Set[]) { |carry, item| carry + detect_variables(item) }
         when Hash then search_in.values.inject(Set[]) { |carry, item| carry + detect_variables(item) }
         else Set[]
