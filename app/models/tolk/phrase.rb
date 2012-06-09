@@ -2,6 +2,10 @@ module Tolk
   class Phrase < ActiveRecord::Base
     set_table_name "tolk_phrases"
 
+    named_scope :containing_text, lambda { |query|
+      { :conditions => ["tolk_phrases.key LIKE ?", "%#{query}%"] }
+    }
+
     validates_uniqueness_of :key
 
     cattr_accessor :per_page
